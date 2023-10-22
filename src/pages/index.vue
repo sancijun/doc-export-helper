@@ -125,31 +125,31 @@
             <n-collapse>
                 <n-collapse-item title="一、创建应用" name="1">
                     <n-p>在 <n-a href="https://open.feishu.cn/app/">飞书开放平台-创建企业自建应用</n-a>。
-                        <n-image src="https://raw.githubusercontent.com/sancijun/images/master/pics/20231017125911280.png"
-                            alt="image.png" />
+                        <n-image src="https://raw.githubusercontent.com/sancijun/images/master/pics/20231022141335131.png"
+                            alt="飞书开放平台-创建企业自建应用" />
                     </n-p>
                     <n-p>在 应用后台-权限管理（点击上面的创建好的应用即可进入对应的应用管理后台） 中找到 <n-text type="info">云文档</n-text>
                         相关的权限，全部勾选，点击批量开通。然后点击版本管理与发布，创建一个版本。
-                        <n-image src="https://raw.githubusercontent.com/sancijun/images/master/pics/20231017130018657.png"
-                            alt="image.png" />
+                        <n-image src="https://raw.githubusercontent.com/sancijun/images/master/pics/20231022141641810.png"
+                            alt="应用后台-添加云文档权限" />
                     </n-p>
                     <n-p>在 <n-a href="https://feishu.cn/admin/appCenter/audit">飞书管理后台-应用审核</n-a> 中进行审批，点击通过即可。
-                        <n-image src="https://raw.githubusercontent.com/sancijun/images/master/pics/20231017130110515.png"
-                            alt="image.png" />
+                        <n-image src="https://raw.githubusercontent.com/sancijun/images/master/pics/20231022141743046.png"
+                            alt="应用审核" />
                     </n-p>
                 </n-collapse-item>
                 <n-collapse-item title="二、应用设置" name="2">
                     <n-p>在 应用后台-凭证与基础信息 中找到 <n-text type="info">App ID</n-text> 和 <n-text type="info">App Secret</n-text> 。
-                        <n-image src="https://raw.githubusercontent.com/sancijun/images/master/pics/20231017130203186.png"
-                            alt="image.png" />
+                        <n-image src="https://raw.githubusercontent.com/sancijun/images/master/pics/20231022141849411.png"
+                            alt="appid&secret" />
                     </n-p>
                     <n-p>填写 App ID 和 App Secret（这些信息只会保存在你的浏览器中，不会泄漏）。</n-p>
                     <n-input v-model:value="appid" type="text" placeholder="请输入 App ID" @change="saveConfigurations"
                         @keydown.enter="saveConfigurations" />
                     <n-input v-model:value="appsecret" type="text" placeholder="请输入 App Secret" status="success"
                         :style="{ marginTop: '15px' }" @change="saveConfigurations" @keydown.enter="saveConfigurations" />
-                    <n-p>在应用后台-安全设置中添加 <n-text type="info">重定向 URL: https://github.com/sancijun/doc-export-helper</n-text>
-                        <n-image src="https://raw.githubusercontent.com/sancijun/images/master/pics/20231017130242264.png"
+                    <n-p>在应用后台-安全设置中添加重定向 URL: <n-text type="info">https://sancijun.github.io/doc-export-helper</n-text>
+                        <n-image src="https://raw.githubusercontent.com/sancijun/images/master/pics/20231022140620859.png"
                             alt="image.png" />
                     </n-p>
                 </n-collapse-item>
@@ -170,7 +170,7 @@
                             <n-input v-model:value="configurations.Github.path" type="text" placeholder="文件存放路径，例如：/images"
                                 :style="{ marginTop: '15px' }" @change="saveConfigurations" />
                             <n-input v-model:value="configurations.Github.customUrl" type="text"
-                                placeholder="自定义域名：https://cdn.example.com" :style="{ marginTop: '15px' }"
+                                placeholder="自定义域名：https://cdn.jsdelivr.net/gh/sancijun/images" :style="{ marginTop: '15px' }"
                                 @change="saveConfigurations" />
                         </template>
                         <template v-else-if="selectedUploadMethod === 'Gitee'">
@@ -441,7 +441,7 @@ const saveConfigurations = () => {
 
 const onClickExport = (type: string) => {
     // 点击导出按钮时执行的操作，这里跳转到 redirect_url
-    let redirect_url = `http://localhost:3333?app_id=${appid.value}&app_secret=${appsecret.value}&export_type=${type}`;
+    let redirect_url = `https://sancijun.github.io/doc-export-helper?app_id=${appid.value}&app_secret=${appsecret.value}&export_type=${type}`;
     let backup_url = `https://open.feishu.cn/open-apis/authen/v1/index?redirect_uri=${encodeURIComponent(
         redirect_url
     )}&app_id=${appid.value}`;
