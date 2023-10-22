@@ -61,6 +61,7 @@ export default defineConfig({
     environment: 'jsdom',
   },
   build: {
+    outDir: 'docs',
     assetsDir: ''
   }
 })
