@@ -198,10 +198,6 @@
                             <n-input v-model:value="configurations.Tencent.path" type="text" placeholder="请输入腾讯云 Path"
                                 :style="{ marginTop: '15px' }" @change="saveConfigurations" />
                         </template>
-                        <template v-else-if="selectedUploadMethod === 'Local'">
-                            <n-input v-model:value="configurations.Local.path" type="text" placeholder="请输入本地保存文件夹路径"
-                                :style="{ marginTop: '15px' }" @change="saveConfigurations" />
-                        </template>
                     </div>
 
                 </n-collapse-item>
@@ -441,7 +437,7 @@ const saveConfigurations = () => {
 
 const onClickExport = (type: string) => {
     // 点击导出按钮时执行的操作，这里跳转到 redirect_url
-    let redirect_url = `https://sancijun.github.io/doc-export-helper?app_id=${appid.value}&app_secret=${appsecret.value}&export_type=${type}`;
+    let redirect_url = `http://localhost:3333/doc-export-helper?app_id=${appid.value}&app_secret=${appsecret.value}&export_type=${type}`;
     let backup_url = `https://open.feishu.cn/open-apis/authen/v1/index?redirect_uri=${encodeURIComponent(
         redirect_url
     )}&app_id=${appid.value}`;

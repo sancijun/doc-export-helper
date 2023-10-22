@@ -26,7 +26,7 @@ export class GithubUploader extends Uploader {
     }
 
     async upload(imageData: string, ext: string): Promise<string | undefined> {
-        const fileKey = `${this.settings.Github.path}${utils.getCurrentTimestamp()}${ext}`;
+        const fileKey = `${this.settings.Github.path}/${utils.getCurrentTimestamp()}${ext}`;
         const apiUrl = `https://api.github.com/repos/${this.settings.Github.repo}/contents${fileKey}`;
 
         const requestData = {
@@ -43,7 +43,7 @@ export class GithubUploader extends Uploader {
         });
 
         const customUrl = this.settings.Github.customUrl.trim();
-        const imageUrl = customUrl === '' ? response.data.content.download_url : customUrl + response.data.content.path;
+        const imageUrl = customUrl === '' ? response.data.content.download_url : `${customUrl}/${response.data.content.path}`;
         return imageUrl;
     }
 }
@@ -55,8 +55,8 @@ export class GiteeUploader extends Uploader {
     }
 
     async upload(imageData: string, ext: string): Promise<string | undefined> {
-        const fileKey = `${this.settings.Gitee.path}${utils.getCurrentTimestamp()}${ext}`;
-        const apiUrl = `https://gitee.com/api/v5/repos/${this.settings.Gitee.repo}/contents/${fileKey}`;
+        const fileKey = `${this.settings.Gitee.path}/${utils.getCurrentTimestamp()}${ext}`;
+        const apiUrl = `https://gitee.com/api/v5/repos/${this.settings.Gitee.repo}/contents${fileKey}`;
 
         const requestData = {
             access_token: this.settings.Gitee.token,
@@ -93,11 +93,9 @@ export class TencentCosUploader extends Uploader {
         });
     }
 
-    
-
-    async upload(imageData: string, fileName: string): Promise<string> {
+    async upload(imageData: string, ext: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            const fileKey = this.settings.Tencent.path + fileName;
+            const fileKey = `${this.settings.Tencent.path}/${utils.getCurrentTimestamp()}${ext}`;
 
             this.cos.putObject(
                 {

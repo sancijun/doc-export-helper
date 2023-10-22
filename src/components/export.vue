@@ -177,7 +177,7 @@ const SaveSelectedDocs = async () => {
     openDownloadModel()
     let docs: string[] = doc_options_value.value
     const f = await feishu.get_some_docs(docs, true)
-    saveAs(f, 'feishu_docs_' + new Date().toDateString() + '_backup.zip')
+    saveAs(f, `feishu-export-${getCurrentTimestamp()}.zip`)
     closeDownloadModel()
 }
 
