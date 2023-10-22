@@ -1,0 +1,20 @@
+html,
+body,
+#app {
+  background-color: rgb(244, 247, 249);
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html.dark {
+  background: #121212;
+}
+
+.n-collapse-item__header-main {
+  font-size: 20px; /* Adjust the font size for bronze */
+}
+
+.n-input, .n-base-selection{
+  border: 1px solid rgb(103, 186, 134);
+}
