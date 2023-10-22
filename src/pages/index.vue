@@ -121,7 +121,7 @@
                 </n-popover>
 
             </n-space>
-            <!-- :default-expanded-names="['2', '3', '4']" -->
+            <!--  -->
             <n-collapse>
                 <n-collapse-item title="一、创建应用" name="1">
                     <n-p>在 <n-a href="https://open.feishu.cn/app/">飞书开放平台-创建企业自建应用</n-a>。
@@ -170,8 +170,8 @@
                             <n-input v-model:value="configurations.Github.path" type="text" placeholder="文件存放路径，例如：/images"
                                 :style="{ marginTop: '15px' }" @change="saveConfigurations" />
                             <n-input v-model:value="configurations.Github.customUrl" type="text"
-                                placeholder="自定义域名：https://cdn.jsdelivr.net/gh/sancijun/images" :style="{ marginTop: '15px' }"
-                                @change="saveConfigurations" />
+                                placeholder="自定义域名：https://cdn.jsdelivr.net/gh/sancijun/images"
+                                :style="{ marginTop: '15px' }" @change="saveConfigurations" />
                         </template>
                         <template v-else-if="selectedUploadMethod === 'Gitee'">
                             <n-input v-model:value="configurations.Gitee.repo" type="text"
@@ -205,16 +205,18 @@
                     <n-p>设置完以上参数后，根据你的需要点击 导出云文档 和 导出知识库 按钮（下面是两个可以点击的按钮哦）：</n-p>
 
                     <n-p><n-button strong secondary round type="primary" @click="onClickExport('docs')">导出云文档</n-button>
-                        点击导出云文档按钮，会跳转到授权页面，授权通过后，选择你需要导出的文件，再点击下载选中文件即可。当然，你也可以下载所有文件，这会遍历整个云空间，下载所有飞书云文档。</n-p>
+                        点击导出云文档按钮，会跳转到授权页面，授权通过后，选择你需要导出的文件，再点击 <n-text type="success">导出</n-text> 按钮即可。如果没有选择任何文件，则默认导出所有文件，这会遍历整个云空间，导出所有飞书云文档。</n-p>
                     <n-p><n-button strong secondary round type="primary" @click="onClickExport('wiki')">导出知识库</n-button>
-                        点击导出知识库按钮，会跳转到授权页面，授权通过后，选择需要导出的知识库，当前仅支持下载整个知识库中的所有文档。</n-p>
+                        点击导出知识库按钮，会跳转到授权页面，授权通过后，选择需要导出的知识库（如果没有选择，默认导出所有知识库），当前仅支持下载整个知识库中的所有文档。</n-p>
 
                 </n-collapse-item>
                 <n-collapse-item title="五、常见问题" name="5">
                     <n-text strong>为什么只能下载一部分云文档？</n-text>
-                    <n-p>目前只支持 doc 和 docx 文件的下载，表格、多维表格可以考虑手动导出（如有需要可以点击右下角 <n-text type="info">功能建议</n-text> 按钮给三此君提需求）。云文档下载后将会被转换成 Markdown，图片及附件将被上传到你指定的位置。</n-p>
+                    <n-p>目前只支持 doc 和 docx 文件的下载，表格、多维表格可以考虑手动导出（如有需要可以点击右下角 <n-text type="info">功能建议</n-text>
+                        按钮给三此君提需求）。云文档下载后将会被转换成 Markdown，图片及附件将被上传到你指定的位置。</n-p>
                     <n-text strong>为什么有些内容没有导出？</n-text>
-                    <n-p>飞书提供的 API 不支持导出 Diagram 等 Block，所以文档导出助手也无法导出这部分内容，还有部分是三此君还没有实现的，如有需要可以点击右下角 <n-text type="info">功能建议</n-text> 按钮给三此君提需求。</n-p>
+                    <n-p>飞书提供的 API 不支持导出 Diagram 等 Block，所以文档导出助手也无法导出这部分内容，还有部分是三此君还没有实现的，如有需要可以点击右下角 <n-text
+                            type="info">功能建议</n-text> 按钮给三此君提需求。</n-p>
 
                 </n-collapse-item>
             </n-collapse>
@@ -238,7 +240,7 @@
                     <n-card tag="a" href="https://www.bilibili.com/video/BV15P411a7C6">
                         <n-image preview-disabled
                             src="https://raw.githubusercontent.com/sancijun/images/master/pics/20231020132221750.png" />
-                            <n-text>我开发了一款 Obsidian 图床插件，全都进来薅羊毛！</n-text>
+                        <n-text>我开发了一款 Obsidian 图床插件，全都进来薅羊毛！</n-text>
                     </n-card>
                 </n-gi>
                 <n-gi>
@@ -252,7 +254,7 @@
                     <n-card tag="a" href="https://www.bilibili.com/video/BV1F24y147Hn">
                         <n-image preview-disabled
                             src="https://raw.githubusercontent.com/sancijun/images/master/pics/20231020224849935.jpg" />
-                            <n-text>7 万字性能调优笔记，拿走拿走别客气！</n-text>
+                        <n-text>7 万字性能调优笔记，拿走拿走别客气！</n-text>
                     </n-card>
                 </n-gi>
             </n-grid>
@@ -260,9 +262,7 @@
     </div>
     <!-- 导出 -->
     <n-modal v-model:show="showExport" transform-origin="center">
-        <n-card :style="{ width: '500px', height: '400px' }" title="导出文档" size="huge">
-            <Export />
-        </n-card>
+        <Export />
     </n-modal>
     <!-- 悬浮按钮 -->
     <n-affix :bottom="80" :right="45" :listen-to="() => containerRef">
@@ -291,7 +291,7 @@
 
             <n-popover placement="right" trigger="hover">
                 <template #trigger>
-                    <n-button circle size="large" @click="onClickExport('docs')">
+                    <n-button circle size="large" @click="onClickExport('wiki')">
                         <template #icon>
                             <n-icon>
                                 <svg t="1697814728888" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -312,7 +312,8 @@
 
             <n-popover placement="right" trigger="hover">
                 <template #trigger>
-                    <n-button circle size="large" tag="a" href="https://github.com/sancijun/doc-export-helper/issues/new?assignees=&labels=enhancement&projects=&template=---feature.md&title=%5BFeature%5D+" >
+                    <n-button circle size="large" tag="a"
+                        href="https://github.com/sancijun/doc-export-helper/issues/new?assignees=&labels=enhancement&projects=&template=---feature.md&title=%5BFeature%5D+">
                         <template #icon>
                             <n-icon>
                                 <svg t="1697777215547" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -330,7 +331,8 @@
 
             <n-popover placement="right" trigger="hover">
                 <template #trigger>
-                    <n-button circle size="large" tag="a" href="https://github.com/sancijun/doc-export-helper/issues/new?assignees=&labels=&projects=&template=---bug.md&title=%5BBug%5D+" >
+                    <n-button circle size="large" tag="a"
+                        href="https://github.com/sancijun/doc-export-helper/issues/new?assignees=&labels=&projects=&template=---bug.md&title=%5BBug%5D+">
                         <template #icon>
                             <n-icon>
                                 <svg t="1697777162390" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -428,7 +430,7 @@ onMounted(() => {
     }
 });
 const saveConfigurations = () => {
-    console.log('saveConfigurations', JSON.stringify(configurations))
+    // console.log('saveConfigurations', JSON.stringify(configurations))
     localStorage.setItem('appid', appid.value);
     localStorage.setItem('appsecret', appsecret.value);
     localStorage.setItem('currentUploader', selectedUploadMethod.value || '');
@@ -437,12 +439,12 @@ const saveConfigurations = () => {
 
 const onClickExport = (type: string) => {
     // 点击导出按钮时执行的操作，这里跳转到 redirect_url
-    let redirect_url = `http://localhost:3333/doc-export-helper?app_id=${appid.value}&app_secret=${appsecret.value}&export_type=${type}`;
-    let backup_url = `https://open.feishu.cn/open-apis/authen/v1/index?redirect_uri=${encodeURIComponent(
+    let redirect_url = `https://sancijun.github.io/doc-export-helper?app_id=${appid.value}&app_secret=${appsecret.value}&export_type=${type}`;
+    let export_url = `https://open.feishu.cn/open-apis/authen/v1/index?redirect_uri=${encodeURIComponent(
         redirect_url
     )}&app_id=${appid.value}`;
-    console.log('onClickExport: ', backup_url)
-    window.open(backup_url);
+    console.log('onClickExport: ', export_url)
+    window.open(export_url);
 }
 
 const containerRef = ref<HTMLElement | undefined>(undefined)

@@ -1,85 +1,82 @@
 <template>
-    <div>
-        <div :style="{ padding: '10px' }">
-            <n-space v-if="page === 'docs'" vertical>
-                <n-cascader v-model:value="doc_options_value" multiple allow-checking-not-loaded :options="doc_options"
-                    cascade :check-strategy="'child'" :show-path="false" remote :on-load="handleLoadDocFolder"
-                    placeholder="选择文件" />
-                <n-space justify="space-around">
-                    <n-button strong secondary type="warning" @click="SaveAllDocs">下载所有文件</n-button>
-                    <n-button strong secondary type="info" @click="SaveSelectedDocs">下载选中文件</n-button>
+    <n-card :style="{ width: '500px' }" title="选择你要导出的文档" size="huge">
+        <template #header-extra>
+            <n-button strong secondary type="success" @click="save">导出</n-button>
+        </template>
+        <div>
+            <div :style="{ padding: '10px', paddingBottom: '30px' }">
+                <n-space v-if="page === 'docs'" vertical>
+                    <n-cascader v-model:value="doc_options_value" multiple allow-checking-not-loaded :options="doc_options"
+                        cascade :check-strategy="'child'" :show-path="false" remote :on-load="handleLoadDocFolder"
+                        filterable clearable placeholder="选择文件" />
+
                 </n-space>
-            </n-space>
 
-            <n-space v-if="page === 'wiki'" justify="space-around">
-                <n-button @click="downloadAllWikis">下载全部知识空间</n-button>
-                <n-button @click="downloadSelectedWikis">下载选中知识空间</n-button>
-            </n-space>
+                <n-space justify="space-around" v-if="page === 'wiki'" :style="{ maxHeight: '80vh', overflow: 'auto' }">
+                    <n-checkbox-group v-model:value="wikis">
+                        <n-list bordered>
+                            <n-list-item v-for="item in wiki_spaces" :key="item.space_id">
+                                <template #prefix>
+                                    <n-checkbox :value="JSON.stringify({ space: item.space_id, name: item.name })" />
+                                </template>
+                                <n-thing :title="item.name">{{ item.description }}</n-thing>
+                                <template #suffix>
+                                    <n-button @click="openSelectWiki(item.space_id, item.name)">下载</n-button>
+                                </template>
+                            </n-list-item>
+                        </n-list>
+                    </n-checkbox-group>
 
-            <n-space justify="space-around" v-if="page === 'wiki'" :style="{maxHeight: '80vh', overflow: 'auto'}">
-                <n-checkbox-group v-model:value="wikis">
-                    <n-list bordered>
-                        <n-list-item v-for="item in wiki_spaces" :key="item.space_id">
-                            <template #prefix>
-                                <n-checkbox :value="JSON.stringify({ space: item.space_id, name: item.name })" />
-                            </template>
-                            <n-thing :title="item.name">{{ item.description }}</n-thing>
-                            <template #suffix>
-                                <n-button @click="openSelectWiki(item.space_id, item.name)">下载</n-button>
-                            </template>
-                        </n-list-item>
-                    </n-list>
-                </n-checkbox-group>
-
-            </n-space>
-        </div>
-    </div>
-    <n-modal v-model:show="downloading" :mask-closable="false" title="下载中" @positive-click="closeDownloadModel" size="huge"
-        :style="{ width: '400px', maxHeight: '600px' }">
-        <n-card>
-            <template #header>下载中</template>
-            <div :style="{
-                overflow: 'auto',
-                maxHeight: '400px'
-            }">
-                <p v-for="item in downloadingList">{{ item }}</p>
+                </n-space>
             </div>
+        </div>
+        <n-modal v-model:show="downloading" :mask-closable="false" title="下载中" @positive-click="closeDownloadModel"
+            size="huge" :style="{ width: '400px', maxHeight: '600px' }">
+            <n-card>
+                <template #header>下载中</template>
+                <div :style="{
+                    overflow: 'auto',
+                    maxHeight: '400px'
+                }">
+                    <p v-for="item in downloadingList">{{ item }}</p>
+                </div>
 
-            <template #footer>
-                <n-button :loading="downloading">完成</n-button>
-            </template>
-        </n-card>
-    </n-modal>
-    <n-modal v-model:show="peding" :mask-closable="false" title="登录中" size="huge"
-        :style="{ width: '400px', maxHeight: '600px' }">
-        <n-spin size="large">
-            <template #description>
-                {{ loading_text }}
-            </template>
-        </n-spin>
-    </n-modal>
-    <n-modal v-model:show="selectWikiPageDialogOpen" title="选择下载" size="huge"
-        :style="{ width: '400px', maxHeight: '600px', minHeight: '300px' }">
-        <n-card :style="{
-            overflow: 'auto'
-        }">
-            <template #header>选择下载指定知识空间页面</template>
-            <n-list bordered>
-                <n-list-item>
-                    <n-thing :title="'全部页面'"></n-thing>
-                    <template #suffix>
-                        <n-button @click="downloadWikiSpace">下载</n-button>
-                    </template>
-                </n-list-item>
-                <n-list-item v-for="item in currentWikiSpaceFirstLevelPages" :key="item.node_token">
-                    <n-thing :title="item.title"></n-thing>
-                    <template #suffix>
-                        <n-button @click="downloadOneWikiPage(item)">下载</n-button>
-                    </template>
-                </n-list-item>
-            </n-list>
-        </n-card>
-    </n-modal>
+                <template #footer>
+                    <n-button :loading="downloading">完成</n-button>
+                </template>
+            </n-card>
+        </n-modal>
+        <n-modal v-model:show="peding" :mask-closable="false" title="登录中" size="huge"
+            :style="{ width: '400px', maxHeight: '600px' }">
+            <n-spin size="large">
+                <template #description>
+                    {{ loading_text }}
+                </template>
+            </n-spin>
+        </n-modal>
+        <n-modal v-model:show="selectWikiPageDialogOpen" title="选择下载" size="huge"
+            :style="{ width: '400px', maxHeight: '600px', minHeight: '300px' }">
+            <n-card :style="{
+                overflow: 'auto'
+            }">
+                <template #header>选择下载指定知识空间页面</template>
+                <n-list bordered>
+                    <n-list-item>
+                        <n-thing :title="'全部页面'"></n-thing>
+                        <template #suffix>
+                            <n-button @click="downloadWikiSpace">下载</n-button>
+                        </template>
+                    </n-list-item>
+                    <n-list-item v-for="item in currentWikiSpaceFirstLevelPages" :key="item.node_token">
+                        <n-thing :title="item.title"></n-thing>
+                        <template #suffix>
+                            <n-button @click="downloadOneWikiPage(item)">下载</n-button>
+                        </template>
+                    </n-list-item>
+                </n-list>
+            </n-card>
+        </n-modal>
+    </n-card>
 </template>
 
 <script lang="ts" setup>
@@ -159,11 +156,41 @@ const login = async () => {
     }
 }
 
+const save = async() => {
+    if(export_type === 'wiki'){
+        saveWikis();
+    }else{
+        saveDocs();
+    }
+}
+
+const saveDocs = async () => {
+    if (!doc_options_value.value || doc_options_value.value.includes("全部导出")) {
+        saveAllDocs();
+    } else {
+        saveSelectedDocs();
+    }
+}
+
+const saveWikis = async() => {
+    if(!wikis.value){
+        downloadAllWikis();
+    }else{
+        downloadSelectedWikis();
+    }
+}
+
 const fetchDocsList = async () => {
     console.log("save docs")
     // openDownloadModel()
     try {
         doc_options.value = await feishu.get_all_docs_list()
+        doc_options.value.unshift({
+            label: "全部导出",
+            value: "全部导出",
+            isLeaf: true,
+            depth: 1
+        })
     } catch (error) {
         console.error(error)
         message.error(error_message)
@@ -172,7 +199,7 @@ const fetchDocsList = async () => {
     // closeDownloadModel()
 }
 
-const SaveSelectedDocs = async () => {
+const saveSelectedDocs = async () => {
     if (!doc_options_value.value) return
     openDownloadModel()
     let docs: string[] = doc_options_value.value
@@ -181,7 +208,7 @@ const SaveSelectedDocs = async () => {
     closeDownloadModel()
 }
 
-const SaveAllDocs = () => {
+const saveAllDocs = () => {
     dialog.warning({
         title: '警告',
         content: '下载所有文件可能耗时较长，推荐仅选择所需文件下载。是否继续下载全部文件？',
@@ -216,8 +243,6 @@ const fetchWikiList = async () => {
         console.error(error)
         message.error(error_message)
     }
-
-
 }
 
 const selectWikiPageDialogOpen = ref(false)
@@ -243,7 +268,7 @@ const downloadOneWikiPage = async (node: NodeRecord) => {
     openDownloadModel()
     try {
         const f = await feishu.get_one_wiki_in_sapce(currentWiki.space_id, true, node)
-        saveAs(f, currentWiki.space_name + "_" + node.title + '_backup.zip')
+        saveAs(f, currentWiki.space_name + "_" + node.title + '_export.zip')
     } catch (error) {
         console.error(error)
         message.error(error_message)
@@ -254,7 +279,7 @@ const downloadWikiSpace = async () => {
     openDownloadModel()
     try {
         const f = await feishu.get_all_wiki_in_space(currentWiki.space_id, true)
-        saveAs(f, currentWiki.space_name + '_backup.zip')
+        saveAs(f, currentWiki.space_name + '_export.zip')
     } catch (error) {
         console.error(error)
         message.error(error_message)
@@ -283,6 +308,7 @@ const handleLoadDocFolder = async (option: any) => {
 }
 
 const wikis = ref<null | any[]>(null)
+
 const downloadSelectedWikis = async () => {
     openDownloadModel()
 
@@ -292,7 +318,7 @@ const downloadSelectedWikis = async () => {
             const info: { space: string, name: string } = JSON.parse(e)
             try {
                 const f = await feishu.get_all_wiki_in_space(info.space, true)
-                saveAs(f, info.name + '_backup.zip')
+                saveAs(f, info.name + '_export.zip')
             } catch (error) {
                 console.error(error)
                 message.error(error_message)
@@ -309,7 +335,7 @@ const downloadAllWikis = async () => {
             const e = wiki_spaces.value[i];
             try {
                 const f = await feishu.get_all_wiki_in_space(e.space_id, true)
-                saveAs(f, e.name + '_backup.zip')
+                saveAs(f, e.name + '_export.zip')
             } catch (error) {
                 console.error(error)
                 message.error(error_message)
