@@ -344,11 +344,9 @@ if (currentUploader === 'Github') {
 async function downloadAsset(ctx: ConvertContext, token: string, user_access: string, zip: JSZip, name?: string) {
     let c = await tmp.getItem<TmpFile>(token)
     if (c) {
-        console.log("downloade asset cache", c)
         const ext = getExt(c.mime)
         if (uploader) {
             const imageData = arrayBufferToBase64(c.data)
-            console.log("image data:", imageData)
             return uploader.upload(imageData, ext);
         } else {
             zip.folder("assets")?.file(`${token}${ext}`, c.data)

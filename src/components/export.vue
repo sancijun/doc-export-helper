@@ -181,7 +181,7 @@ const saveWikis = async() => {
 }
 
 const fetchDocsList = async () => {
-    console.log("save docs")
+    console.log("fetch docs list")
     // openDownloadModel()
     try {
         doc_options.value = await feishu.get_all_docs_list()
