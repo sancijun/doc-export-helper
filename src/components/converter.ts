@@ -4,7 +4,7 @@ import localforage from 'localforage'
 import axios from "axios";
 import { feishu_api } from "./api";
 import { GiteeUploader, GithubUploader, TencentCosUploader, Uploader } from "./uploader";
-import { arrayBufferToBase64 } from "./utils";
+import { arrayBufferToBase64, getExt } from "./utils";
 
 class StringFile {
     file = ""
@@ -28,13 +28,13 @@ export class Converter {
     uploader: Uploader | undefined
     constructor() {
         const currentUploader = localStorage.getItem('currentUploader');
-        if(currentUploader === 'Github'){
-            this.uploader =  new GithubUploader();
-        }else if(currentUploader === 'Gitee'){
+        if (currentUploader === 'Github') {
+            this.uploader = new GithubUploader();
+        } else if (currentUploader === 'Gitee') {
             this.uploader == new GiteeUploader();
-        }else if(currentUploader === 'Tencent'){
+        } else if (currentUploader === 'Tencent') {
             this.uploader = new TencentCosUploader();
-        }else {
+        } else {
             this.uploader = undefined;
         }
         this.tmp = localforage.createInstance({
@@ -162,33 +162,40 @@ export class Converter {
 
     async downloadAsset(id: string, token: string, zip: JSZip) {
         let c = await this.tmp.getItem<TmpFile>(id)
-        let ext = ""
         if (c) {
-            let mime = c.mime
-            if (mime == 'image/png')
-                ext = ".png"
-            else if (mime == 'image/jpeg' || mime == 'image/jpg')
-                ext = ".jpg"
-            return this.uploader?.upload(c.data, ext);
-        } else {
-            let r = await axios.get(feishu_api(`/drive/v1/medias/${id}/download`),
-                {
-                    headers: { 'Authorization': 'Bearer ' + token },
-                    responseType: 'arraybuffer'
-                })
-            let mime = r.headers['content-type']
+            const ext = getExt(c.mime)
+            if (this.uploader) {
+                const imageData = arrayBufferToBase64(c.data)
+                return this.uploader.upload(imageData, ext);
+            } else {
+                zip.folder("assets")?.file(`${id}${ext}`, c.data)
+                return `./assets/${id}${ext}`;
+            }
 
-            if (mime == 'image/png')
-                ext = ".png"
-            else if (mime == 'image/jpeg' || mime == 'image/jpg')
-                ext = ".jpg"
-            const imageData = arrayBufferToBase64(r.data)
-            await this.tmp.setItem(id, {
-                mime: mime,
-                data: imageData
-            })
-            return this.uploader?.upload(imageData, ext);
         }
+
+        let r = await axios.get(feishu_api(`/drive/v1/medias/${id}/download`),
+            {
+                headers: { 'Authorization': 'Bearer ' + token },
+                responseType: 'arraybuffer'
+            })
+        let mime = r.headers['content-type']
+    
+
+        await this.tmp.setItem(id, {
+            mime: mime,
+            data: r.data
+        })
+
+        let ext = getExt(mime);
+        if (this.uploader) {
+            const imageData = arrayBufferToBase64(r.data)
+            return this.uploader.upload(imageData, ext);
+        } else {
+            zip.folder("assets")?.file(`${id}${ext}`, r.data)
+            return `./assets/${id}${ext}`;
+        }
+
     }
 }
 

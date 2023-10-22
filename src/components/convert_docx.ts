@@ -3,7 +3,7 @@ import JSZip from "jszip"
 import localforage from "localforage"
 import { feishu_api } from "./api"
 import { TmpFile } from "./converter"
-import { arrayBufferToBase64 } from "./utils"
+import { arrayBufferToBase64, getExt } from "./utils"
 import { GiteeUploader, GithubUploader, TencentCosUploader, Uploader } from "./uploader"
 
 
@@ -329,7 +329,7 @@ const tmp = localforage.createInstance({
     name: 'file_cache'
 })
 
-let uploader : Uploader | undefined;
+let uploader: Uploader | undefined;
 const currentUploader = localStorage.getItem('currentUploader');
 if (currentUploader === 'Github') {
     uploader = new GithubUploader();
@@ -343,38 +343,37 @@ if (currentUploader === 'Github') {
 
 async function downloadAsset(ctx: ConvertContext, token: string, user_access: string, zip: JSZip, name?: string) {
     let c = await tmp.getItem<TmpFile>(token)
-    let ext = { value: "" }
-    function get_ext(mim: string) {
-        const mtype = mim.split("/")
-        if (mtype.length === 2) {
-            ext.value = "." + mtype[1]
+    if (c) {
+        console.log("downloade asset cache", c)
+        const ext = getExt(c.mime)
+        if (uploader) {
+            const imageData = arrayBufferToBase64(c.data)
+            console.log("image data:", imageData)
+            return uploader.upload(imageData, ext);
         } else {
-            console.log(mtype)
+            zip.folder("assets")?.file(`${token}${ext}`, c.data)
+            return `./assets/${token}${ext}`;
         }
     }
-    if (c) {
-        let mime = c.mime
-        get_ext(mime)
-        // zip.folder("assets")?.file(name ? (token + "_" + name) : (token + ext.value), c.data)
-        return uploader.upload(c.data, ext.value);
-    } else {
-        let r = await axios.get(feishu_api(`/drive/v1/medias/${token}/download`),
-            {
-                headers: { 'Authorization': 'Bearer ' + user_access },
-                responseType: 'arraybuffer'
-            })
-        let mime = r.headers['content-type']
-        get_ext(mime)
-        const imageData = arrayBufferToBase64(r.data)
 
-        // zip.folder("assets")?.file(name ? (token + "_" + name) : (token + ext.value), imageData)
-        await tmp.setItem(token, {
-            mime: mime,
-            data: imageData
-        })
-        return uploader.upload(imageData, ext.value);
+    let r = await axios.get(feishu_api(`/drive/v1/medias/${token}/download`), {
+        headers: { 'Authorization': 'Bearer ' + user_access },
+        responseType: 'arraybuffer'
+    })
+    let mime = r.headers['content-type']
+    await tmp.setItem(token, {
+        mime: mime,
+        data: r.data
+    })
+
+    const ext = getExt(mime)
+    if (uploader) {
+        const imageData = arrayBufferToBase64(r.data)
+        return uploader.upload(imageData, ext);
+    } else {
+        zip.folder("assets")?.file(`${token}${ext}`, r.data)
+        return `./assets/${token}${ext}`;
     }
-    // return name ? (token + "_" + name) : (token + ext.value)
 }
 
 async function makeQPScall(qps: number, ctx: ConvertContext, func: () => Promise<AxiosResponse<any, any>>) {

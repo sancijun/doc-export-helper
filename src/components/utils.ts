@@ -149,3 +149,14 @@ export function stringNullIsDefault(str:string, defaultString: string) {
       return defaultString
   return str
 }
+
+export function getExt(mime: string) {
+  const mtype = mime.split("/")
+  if (mtype.length === 2) {
+      const ext = "." + mtype[1]
+      return ext;
+  } else {
+      console.log(mtype)
+      return ".png";
+  }
+}

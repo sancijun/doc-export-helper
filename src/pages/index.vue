@@ -157,7 +157,7 @@
                     <n-p>请选择图片及附件上传方式，目前支持 Github、Gitee、腾讯云
                         COS、本地保存。如果你选择并设置了图床，图片及附件将按照你的设置上传到指定位置。同时，以下信息只会存储在你的浏览器本地，不会泄漏。</n-p>
                     <n-select v-model:value="selectedUploadMethod" :options="uploadMethods"
-                        :style="{ marginTop: '15px' }" />
+                        :style="{ marginTop: '15px' }" @update:value="onUploadMethodUpdate" />
                     <div v-if="selectedUploadMethod">
                         <template v-if="selectedUploadMethod === 'Github'">
                             <n-input v-model:value="configurations.Github.repo" type="text"
@@ -376,6 +376,7 @@ import {
     NIcon,
     NGi,
     NGrid,
+SelectOption,
 } from 'naive-ui';
 import { ref, reactive, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
@@ -436,6 +437,10 @@ const saveConfigurations = () => {
     localStorage.setItem('currentUploader', selectedUploadMethod.value || '');
     localStorage.setItem('configurations', JSON.stringify(configurations));
 };
+
+const onUploadMethodUpdate = (value: string, option: SelectOption) => {
+    saveConfigurations();
+}
 
 const onClickExport = (type: string) => {
     // 点击导出按钮时执行的操作，这里跳转到 redirect_url
