@@ -22,7 +22,7 @@
                     </template>
                     <n-space vertical>
                         <span>B 站, 有点精彩~</span>
-                        <n-image width="150" src="/10.jpeg" />
+                        <n-image width="150" src="./10.jpeg" />
                     </n-space>
                 </n-popover>
                 <n-popover placement="bottom" trigger="hover">
@@ -41,7 +41,7 @@
                     </template>
                     <n-space vertical>
                         <span>抖音，看我看我~</span>
-                        <n-image width="150" src="/11.jpeg" />
+                        <n-image width="150" src="./11.jpeg" />
                     </n-space>
                 </n-popover>
 
@@ -72,7 +72,7 @@
                     </template>
                     <n-space vertical>
                         <span>微信公众号，关注走起~</span>
-                        <n-image width="150" src="/12.jpg" />
+                        <n-image width="150" src="./12.jpg" />
                     </n-space>
                 </n-popover>
 
@@ -95,7 +95,7 @@
                     </template>
                     <n-space vertical>
                         <span>微信号，交个朋友~</span>
-                        <n-image width="150" src="/13.jpg" />
+                        <n-image width="150" src="./13.jpg" />
                     </n-space>
                 </n-popover>
 
@@ -121,19 +121,19 @@
             <n-collapse>
                 <n-collapse-item title="一、创建应用" name="1">
                     <n-p>在 <n-a href="https://open.feishu.cn/app/">飞书开放平台-创建企业自建应用</n-a>。
-                        <n-image src="/1.png" alt="飞书开放平台-创建企业自建应用" />
+                        <n-image src="./1.png" alt="飞书开放平台-创建企业自建应用" />
                     </n-p>
                     <n-p>在 应用后台-权限管理（点击上面的创建好的应用即可进入对应的应用管理后台） 中找到 <n-text type="info">云文档</n-text>
                         相关的权限，全部勾选，点击批量开通。然后点击版本管理与发布，创建一个版本。
-                        <n-image src="/2.png" alt="应用后台-添加云文档权限" />
+                        <n-image src="./2.png" alt="应用后台-添加云文档权限" />
                     </n-p>
                     <n-p>在 <n-a href="https://feishu.cn/admin/appCenter/audit">飞书管理后台-应用审核</n-a> 中进行审批，点击通过即可。
-                        <n-image src="/3.png" alt="应用审核" />
+                        <n-image src="./3.png" alt="应用审核" />
                     </n-p>
                 </n-collapse-item>
                 <n-collapse-item title="二、应用设置" name="2">
                     <n-p>在 应用后台-凭证与基础信息 中找到 <n-text type="info">App ID</n-text> 和 <n-text type="info">App Secret</n-text> 。
-                        <n-image src="/4.png" alt="appid&secret" />
+                        <n-image src="./4.png" alt="appid&secret" />
                     </n-p>
                     <n-p>填写 App ID 和 App Secret（这些信息只会保存在你的浏览器中，不会泄漏）。</n-p>
                     <n-input v-model:value="appid" type="text" placeholder="请输入 App ID" @change="saveConfigurations"
@@ -141,7 +141,7 @@
                     <n-input v-model:value="appsecret" type="text" placeholder="请输入 App Secret" status="success"
                         :style="{ marginTop: '15px' }" @change="saveConfigurations" @keydown.enter="saveConfigurations" />
                     <n-p>在应用后台-安全设置中添加重定向 URL: <n-text type="info">https://sancijun.github.io/doc-export-helper</n-text> 或 <n-text type="info">https://sancijun.gitee.io/doc-export-helper</n-text>
-                        <n-image src="/5.png" alt="image.png" />
+                        <n-image src="./5.png" alt="image.png" />
                     </n-p>
                 </n-collapse-item>
                 <n-collapse-item title="三、图床设置" name="3">
@@ -222,25 +222,25 @@
             <n-grid x-gap="12" :cols="4">
                 <n-gi>
                     <n-card tag="a" href="https://www.bilibili.com/video/BV1sM4y1Y74k">
-                        <n-image preview-disabled src="/6.jpg" />
+                        <n-image preview-disabled src="./6.jpg" />
                         <n-text>全网唯一支持导出图文的微信读书插件，还可以同步 Notion，惊艳！</n-text>
                     </n-card>
                 </n-gi>
                 <n-gi>
                     <n-card tag="a" href="https://www.bilibili.com/video/BV15P411a7C6">
-                        <n-image preview-disabled src="/7.png" />
+                        <n-image preview-disabled src="./7.png" />
                         <n-text>我开发了一款 Obsidian 图床插件，全都进来薅羊毛！</n-text>
                     </n-card>
                 </n-gi>
                 <n-gi>
                     <n-card tag="a" href="https://www.bilibili.com/video/BV1534y157RF">
-                        <n-image preview-disabled src="/8.jpg" />
+                        <n-image preview-disabled src="./8.jpg" />
                         <n-text>一张图进阶 RocketMQ 系列，妥妥的收藏级宝藏系列！</n-text>
                     </n-card>
                 </n-gi>
                 <n-gi>
                     <n-card tag="a" href="https://www.bilibili.com/video/BV1F24y147Hn">
-                        <n-image preview-disabled src="/9.jpg" />
+                        <n-image preview-disabled src="./9.jpg" />
                         <n-text>7 万字性能调优笔记，拿走拿走别客气！</n-text>
                     </n-card>
                 </n-gi>
