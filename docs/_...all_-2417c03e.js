@@ -1,1 +1,0 @@
-import{d as t,c as s,w as e,u as a,o,a as r,b as c,N as n,e as _}from"./index-5c5811c3.js";const d=t({__name:"[...all]",setup(l){return(p,i)=>(o(),s(a(_),{size:"large",description:"你什么也找不到"},{extra:e(()=>[r(a(n),{size:"small"},{default:e(()=>[c(" 看看别的 ")]),_:1})]),_:1}))}});export{d as default};
